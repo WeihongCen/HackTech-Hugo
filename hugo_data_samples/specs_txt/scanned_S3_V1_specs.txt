@@ -1,0 +1,23 @@
+Voltway $3 V1 Standard
+Overview: All-terrain model built for durability.
+Bill of Materials:
+Part ID Part Name Qty Notes
+P316 S3 V1 500W Brushless Motor 1
+P317 $3 V1 Li-lon 36V 10Ah Battery Pack 1
+P318 $3 V1 Analog Controller ZX
+P319 $3 V1 Aluminum Frame Reinforced down-tube
+P324 LCD Dashboard Display
+P325 10-inch Alloy Wheel Front & Rear
+P326 Mechanical Disc Brake 160 mm rotor
+P327 Standard LED Headlight
+P328 Standard Charger 42V 1.5A
+P334 Power Cable
+P335 Comfort Seat Optional
+P336 Rear Fender
+P337 Hex Nut 12 M6
+P338 Lock Washer Ae M6
+Assembly Requirements:
+* Torque motor mounting bolts to 35 Nm.
+* Inspect frame welds for 100% penetration.
+* Seal battery housing with IP65 gasket kit.
+* Confirm brake pad wear limit 2 4mm after calibration.

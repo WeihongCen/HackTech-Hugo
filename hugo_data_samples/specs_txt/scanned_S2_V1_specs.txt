@@ -1,0 +1,26 @@
+Voltway S2 V1 Standard
+Overview: Rugged urban scooter optimized for range.
+Bill of Materials:
+Part ID Part Name Qty Notes
+P308 $2 V1 500W Brushless Motor 1
+$2 V1 Li-lon 36V 10Ah Battery Pack 1
+P309
+P310 $2 V1 Analog Controller ZX
+P311 $2 V1 Aluminum Frame
+P324 LCD Dashboard Display
+P325 10-inch Alloy Wheel Front & Rear
+P326 Mechanical Disc Brake 160 mm rotor
+R327. Standard LED Headlight
+P328
+Standard Charger 42V 1.5A
+P334 Power Cable
+Optional
+P335 Comfort Seat
+P336 Rear Fender
+E337, Hex Nut 12 M6
+P338 Lock Washer 12 M6
+Assembly Requirements:
++ Torque motor mounting bolts to 35Nm.
++ Verify battery cell balancing before installation.
++ Apply silicone sealant to display wiring grommet.
+¢ Brake rotor run-out must be < 0.15mm.
