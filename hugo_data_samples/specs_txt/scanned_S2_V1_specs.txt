@@ -21,4 +21,3 @@ Assembly Requirements:
 - Verify battery cell balancing before installation.
 - Apply silicone sealant to display wiring grommet.
 * Brake rotor run-out must be < 0.15mm.
-i

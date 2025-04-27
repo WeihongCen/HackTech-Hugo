@@ -21,4 +21,3 @@ Assembly Requirements:
 * Perform regenerative-brake calibration in controller diagnostics.
 * Ensure OLED Display firmware v3.0 or later.
 * Verify wheel alignment within 0.5mm lateral run-out.
-eee
