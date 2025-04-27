@@ -150,6 +150,7 @@ def generate_data_rows(client_openai, input):
 
     rows = completion.choices[0].message.parsed.rows
     elapsed = time.perf_counter() - start_time
+    print(rows)
     print(f"Returned {len(rows)} rows in {elapsed:.2f} seconds")
     return rows
 
