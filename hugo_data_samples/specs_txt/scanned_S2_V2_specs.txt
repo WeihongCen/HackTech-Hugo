@@ -1,16 +1,16 @@
 Voltway S2 V2 Pro
 Overview: Enhanced torque model with upgraded braking system.
 Bill of Materials:
-Part ID Part Name Qty Notes
-RoaZ S2 V2 750W Brushless Motor 1
-P3138 $2 V2 Li-Po 48V 12Ah Battery Pack 1
-P314 $2 V2 Digital Controller ZP
-P315 $2 V2 Carbon Fiber Frame
-P329 OLED Dashboard Display
+PartID Part Name Qty Notes
+P3t2 S2 V2 750W Brushless Motor 1
+P313 S2 V2 Li-Po 48V 12Ah Battery Pack 1
+P314 S2 V2 Digital Controller ZP 1
+P315 S2 V2 Carbon Fiber Frame 1
+P329 OLED Dashboard Display 1
 P330 12-inch Alloy Wheel 2 Front & Rear
 P331 Hydraulic Disc Brake 1 180 mm rotor
 P332 Advanced LED Headlight with DRL 1
-P3338 Fast Charger 42V 2A 1 2.0A
+P333 Fast Charger 42V 2A 1 2.0A
 P334 Power Cable 1
 P335 Comfort Seat 1 Optional
 P336 Rear Fender 1
@@ -18,6 +18,7 @@ P337 Hex Nut 12 M6
 P338 Lock Washer 12 M6
 Assembly Requirements:
 * Torque motor mounting bolts to 40 Nm.
-+ Perform regenerative-brake calibration in controller diagnostics.
-¢ Ensure OLED Display firmware v3.0 or later.
+* Perform regenerative-brake calibration in controller diagnostics.
+* Ensure OLED Display firmware v3.0 or later.
 * Verify wheel alignment within 0.5mm lateral run-out.
+eee

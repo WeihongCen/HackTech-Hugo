@@ -1,49 +1,38 @@
 import os
-import ocrmypdf
-import pdfplumber
+import cv2
+import numpy as np
+from pdf2image import convert_from_path
+import pytesseract
 
-"""
-Convert the PDFS from the `specs` folder into txt files and save them into the `specs_txt` folder. Doing so requires 2 steps:
-1. use OCR to convert the PDF into text-selectable PDF
-2. use pdfplumber to extract the text from the text-selectable PDF. This way, we preserve the original tabular layout of the PDF
-"""
+def preprocess_image(pil_image):
+    img = np.array(pil_image)
+    img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+    return img
 
-spec_folder = os.path.join(os.getcwd(), 'hugo_data_samples', 'specs')
-ocr_output_folder = os.path.join(os.getcwd(), 'hugo_data_samples', 'specs_ocr')
-os.makedirs(ocr_output_folder, exist_ok=True)
+pdf_folder = os.path.join(os.getcwd(), 'hugo_data_samples', 'specs')
+output_folder = os.path.join(os.getcwd(), 'hugo_data_samples', 'specs_txt')
+os.makedirs(output_folder, exist_ok=True)
+custom_config = r'--oem 3 --psm 6'
 
-print("OCR processing PDFs...")
-for pdf_filename in os.listdir(spec_folder):
-    input_path = os.path.join(spec_folder, pdf_filename)
-    output_path = os.path.join(ocr_output_folder, pdf_filename)
-    ocrmypdf.ocr(input_path, output_path, force_ocr=True)
-print("OCR done.")
+for pdf_file in os.listdir(pdf_folder):
+    if pdf_file.endswith(".pdf"):
+        pdf_path = os.path.join(pdf_folder, pdf_file)
+        images = convert_from_path(pdf_path, dpi=300)  # High-res images
 
-output_dir = os.path.join(os.getcwd(), 'hugo_data_samples', 'specs_txt')
-os.makedirs(output_dir, exist_ok=True)
-
-ocr_folder = os.path.join(os.getcwd(), 'hugo_data_samples', 'specs_ocr')
-all_pdfs = os.listdir(ocr_folder)
-
-print("Extracting tables and text...")
-for pdf_filename in all_pdfs:
-    pdf_path = os.path.join(ocr_folder, pdf_filename)
-    output_txt = os.path.join(output_dir, pdf_filename.replace('.pdf', '.txt'))
-
-    with pdfplumber.open(pdf_path) as pdf:
         full_text = ""
-        for page in pdf.pages:
-            # Extract tables
-            tables = page.extract_tables()
-            for table in tables:
-                for row in table:
-                    full_text += "\t".join(row) + "\n"
-                full_text += "\n"
+        for i, img in enumerate(images):
+            preprocessed_img = preprocess_image(img)
+            text = pytesseract.image_to_string(preprocessed_img, config=custom_config)
 
-            # Extract non-tabular text
-            full_text += page.extract_text() or ""
-            full_text += "\n"
+            text = text.replace('$', 'S')
+            text = text.replace('BillofMaterials', 'Bill of Materials')
+            text = text.replace('PartIDPartName', 'PartID Part Name')
+            text = text.replace('QtyNotes', 'Qty Notes')
 
-    with open(output_txt, 'w', encoding='utf-8') as f:
-        f.write(full_text)
+            full_text += text
+
+        output_path = os.path.join(output_folder, pdf_file.replace('.pdf', '.txt'))
+        with open(output_path, 'w', encoding='utf-8') as f:
+            f.write(full_text)
+
 print("Done.")
