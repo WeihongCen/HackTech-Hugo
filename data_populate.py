@@ -18,7 +18,7 @@ Columns:
 **Table 2: material_master**
 Description: This table provides detailed information about each part, including its name, type, models it is used in, dimensions, weight, and any related parts.
 Columns:
-- part_id
+- part_id (note: this is a primary key with format P123)
 - part_name
 - part_type
 - used_in_models
@@ -52,7 +52,7 @@ Columns:
 - accepted_request_date
 
 **Table 5: stock_levels**
-Description: This table provides the current inventory levels of parts in different warehouse locations.
+Description: This table provides the number of parts stored in different warehouse locations.
 Columns:
 - part_id
 - part_name
@@ -84,8 +84,7 @@ Columns:
 - product_name
 - part_id
 - quantity
-"""
-FOREIGN_KEYS = {"part_id": "material_master"}
+"""FOREIGN_KEYS = {"part_id": "material_master"}
 
 class Column(BaseModel):
     column_name: str
@@ -115,6 +114,7 @@ def generate_data_rows(client_openai, input):
       - `columns`: a list of columns to modify, where each column has:
         - `column_name`: the exact field name from the schema
         - `value`: the new value to set for that column (can be a string, number, or null)
+      - `reasoning`: a reason why the table is selected
 
     Important rules:
     - Only use tables and column names defined in the provided schema.
@@ -126,7 +126,7 @@ def generate_data_rows(client_openai, input):
     """
 
     completion = client_openai.beta.chat.completions.parse(
-        model="gpt-4.1-nano-2025-04-14",
+        model="gpt-4.1",
         response_format=Response,
         messages=[
             {
