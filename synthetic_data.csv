@@ -1,0 +1,6 @@
+part_id,part_name,type,used_in_models,dimensions,weight,comment
+P400,Advanced Brushless Motor,service,S1_V1;S2_V1,N/A,3.51,High-efficiency motor for S4
+P401,Lithium Polymer Battery 48V,service,S1_V2,N/A,4.24,Lightweight battery with extended range
+P402,Digital Controller ZQ,assembly,S2_V2,N/A,2.82,Enhanced control for precision
+P403,Carbon Fiber Frame,assembly,S1_V1;S2_V2,N/A,3.19,
+P404,OLED Dashboard Display,service,S1_V1,N/A,1.90,High-resolution display for advanced models
