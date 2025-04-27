@@ -2,7 +2,7 @@ import csv
 import json
 import io
 import email
-from pdf2image import convert_from_path
+from pdf2image import convert_from_bytes
 import pytesseract
 import numpy as np
 import cv2
@@ -19,19 +19,18 @@ def preprocess_image(pil_image):
     return img
 
 def read_pdf(file):
-    """ Given a PDF file, extract its text using OCR and return the text as a string."""
-    
-    file_path = "/tmp/temp_pdf.pdf"
-    with open(file_path, 'wb') as f:
-        f.write(file.read())
-    images = convert_from_path(file_path, dpi=300)
+    """ Given a PDF file, extract its text using OCR and return the text as a JSON string."""
+
+    images = convert_from_bytes(file.read(), dpi=300)
     full_text = ""
     custom_config = r'--oem 3 --psm 6'
+    
     for i, img in enumerate(images):
         preprocessed_img = preprocess_image(img)
         text = pytesseract.image_to_string(preprocessed_img, config=custom_config)
         text = text.replace('$', 'S')
         full_text += text
+    
     return json.dumps({"extracted_text": full_text})
 
 def read_txt(file):
