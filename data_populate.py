@@ -84,7 +84,9 @@ Columns:
 - product_name
 - part_id
 - quantity
-"""FOREIGN_KEYS = {"part_id": "material_master"}
+"""
+
+FOREIGN_KEYS = {"part_id": "material_master"}
 
 class Column(BaseModel):
     column_name: str
