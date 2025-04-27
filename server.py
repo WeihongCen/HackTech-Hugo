@@ -1,11 +1,12 @@
-from flask import Flask, request, jsonify
 import os
-from openai import OpenAI
-from supabase import create_client
-from dotenv import load_dotenv
+from flask      import Flask, request, jsonify
+from openai     import OpenAI
+from supabase   import create_client
+from dotenv     import load_dotenv
 
-from file_reader import read_csv, read_pdf, read_txt, read_eml
-from data_populate import generate_data_rows, upsert
+from file_reader    import read_csv, read_pdf, read_txt, read_eml
+from data_populate  import generate_data_rows, upsert
+from data_query     import query
 
 
 # Load environment variables
@@ -73,6 +74,23 @@ def modify_database():
         upsert(client_supabase, rows)
 
         return jsonify({"status": "success", "modified_rows": len(rows)})
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+
+@app.route('/query', methods=['POST'])
+def query_database():
+    try:
+        content = request.json.get("user_input", "")
+        
+        if not content:
+            return jsonify({"error": "Missing 'user_input' field"}), 400
+
+        # Generate rows from the input
+        response = query(content)
+
+        return jsonify({"status": "success", "response": response})
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500

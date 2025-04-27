@@ -1,8 +1,13 @@
-import collections
-from pydantic import BaseModel
-from typing import Union
-import time
-
+from langchain.agents.agent_types import AgentType
+from langchain_experimental.agents.agent_toolkits import create_pandas_dataframe_agent
+from langchain_openai import ChatOpenAI
+from supabase import create_client
+import pandas as pd
+import dotenv
+import os
+dotenv.load_dotenv()
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
 SCHEMA_DESCRIPTION = """
 We have a procurement database with the following tables:
@@ -85,23 +90,45 @@ Columns:
 - part_id
 - quantity
 """
-FOREIGN_KEYS = {"part_id": "material_master"}
+TABLES = ["material_master", 
+          "stock_levels",
+          "stock_movements",
+          "dispatch_parameters", 
+          "material_orders", 
+          "sales_orders", 
+          "suppliers",
+          "specs",
+          ]
+supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-class Column(BaseModel):
-    column_name: str
-    value: Union[str, int, float, None]
 
-class Row(BaseModel):
-    table_name: str
-    columns: list[Column]
+def query(input):
+    print("Querying database")
+    dataframes = []
+    for table in TABLES:
+        try:
+            response = supabase.table(table).select("*").execute()
+            if response.data:
+                df = pd.DataFrame(response.data)
+                dataframes.append(df)
+        except Exception as e:
+            print(f"Cannot find table {table}")
 
-class Response(BaseModel):
-    rows: list[Row]
+    print(f"Processing {len(dataframes)} dataframes")
+
+    agent = create_pandas_dataframe_agent(
+        ChatOpenAI(temperature=0, model="gpt-4.1"),
+        dataframes,
+        verbose=True,
+        agent_type=AgentType.OPENAI_FUNCTIONS,
+        allow_dangerous_code=True
+    )
+
+    response = agent.invoke(input)
+    return response["output"]
 
 
 def generate_data_rows(client_openai, input):
-    print("Looking for rows to modify")
-    start_time = time.perf_counter()
     prompt = f"""
     {SCHEMA_DESCRIPTION}
 
@@ -126,7 +153,7 @@ def generate_data_rows(client_openai, input):
     """
 
     completion = client_openai.beta.chat.completions.parse(
-        model="gpt-4.1-nano-2025-04-14",
+        model="gpt-4.1-2025-04-14",
         response_format=Response,
         messages=[
             {
@@ -147,8 +174,7 @@ def generate_data_rows(client_openai, input):
     )
 
     rows = completion.choices[0].message.parsed.rows
-    elapsed = time.perf_counter() - start_time
-    print(f"Returned {len(rows)} rows in {elapsed:.2f} seconds")
+    print(rows)
     return rows
 
 
@@ -186,4 +212,5 @@ def upsert(client_supabase, rows):
     for table_name, data in tables.items():
         for foreign_key in FOREIGN_KEYS:
             verify_foreign_key(client_supabase, foreign_key, data)
+        print(data)
         client_supabase.table(table_name).upsert(data).execute()
