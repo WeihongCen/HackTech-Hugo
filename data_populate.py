@@ -189,4 +189,7 @@ def upsert(client_supabase, rows):
     for table_name, data in tables.items():
         for foreign_key in FOREIGN_KEYS:
             verify_foreign_key(client_supabase, foreign_key, data)
-        client_supabase.table(table_name).upsert(data).execute()
+        if table_name == "specs":
+            client_supabase.table(table_name).insert(data).execute()
+        else:
+            client_supabase.table(table_name).upsert(data).execute()
