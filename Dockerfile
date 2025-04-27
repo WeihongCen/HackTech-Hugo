@@ -14,7 +14,7 @@ RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 # Expose Flask port (default is 5000)
-EXPOSE 5000
+EXPOSE 8080
 
 # Run the Flask app
-CMD ["python", "app.py"]
+CMD ["gunicorn", "-b", "0.0.0.0:8080", "app:app"]
